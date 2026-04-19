@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>hehe</title>
+	<style>
+		body {
+			background: #111;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+		}
+		canvas {
+			display: block;
+			background: transparent;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="heartCanvas" width="600" height="600"></canvas>
+	<script>
+		const canvas = document.getElementById('heartCanvas');
+		const ctx = canvas.getContext('2d');
+		const w = canvas.width;
+		const h = canvas.height;
+		const centerX = w / 2;
+		const centerY = h / 2 + 20;
+		const text = "I miss you";
+		const fontSize = 16; 
+		ctx.font = `${fontSize}px VT323`;
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		const heartPoints = 120; 
+		const radius = 200;
+		let offset = 0;
+
+		function heartPath(t) {
+			const x = 16 * Math.pow(Math.sin(t), 3);
+			const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+			return [x, -y];
+		}
+
+
+		function drawHeartText(loopOffset) {
+			ctx.clearRect(0, 0, w, h);
+			ctx.save();
+			ctx.translate(centerX, centerY);
+			ctx.fillStyle = '#ffb6c1';
+			for (let i = 0; i < heartPoints; i++) {
+				const t = ((i + loopOffset) % heartPoints) / heartPoints * 2 * Math.PI;
+				const [x, y] = heartPath(t);
+				ctx.save();
+				ctx.translate(x * radius / 18, y * radius / 18);
+				ctx.fillText(text, 0, 0);
+				ctx.restore();
+			}
+			ctx.restore();
+		}
+
+		function animate() {
+			drawHeartText(offset);
+			offset = (offset + 0.10) % heartPoints;
+			requestAnimationFrame(animate);
+		}
+
+		animate();
+	</script>
+</body>
+</html>
+ 
